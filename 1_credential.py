@@ -1,38 +1,36 @@
-from typing import Any
-
-import pandas as pd
 import numpy as np
-from random import randint, choice, random
+import pandas as pd
+from random import choice
 
-def crea_credenziali() -> pd.DataFrame:
-    utente: dict = {"ID_UTENTE" : [],
-                    "CONTO_CORRENTE" : [],
-                    "ENTRATE" : [],
-                    "USCITE" : [],
-                    "DEBITO" : [],
-                    "TIPOLOGIA_LAVORO" : [],
-                    "PUNTEGGIO_CREDITO" : [],
-                    "ESITO" : []
-                    }
+def genera_dati_credenziali(n_righe: int = 100) -> pd.DataFrame:
+    utente: dict = {
+        "ID_UTENTE": [],
+        "CONTO_CORRENTE": [],
+        "ENTRATE": [],
+        "USCITE": [],
+        "DEBITO": [],
+        "TIPOLOGIA_LAVORO": [],
+        "PUNTEGGIO_CREDITO": [],
+        "ESITO": []
+    }
 
-    for i in range(100):
-        id : int = np.random.randint(1, 10)
-        conto_corrente: int = np.random.randint(-1000, 50000)
-        entrate: int = np.random.randint(800, 5000)
-        uscite: int = np.random.randint(300, 10000)
+    for _ in range(n_righe):
+        id_utente: int = int(np.random.randint(1, 10))
+        conto_corrente: int = int(np.random.randint(-1000, 50000))
+        entrate: int = int(np.random.randint(800, 5000))
+        uscite: int = int(np.random.randint(300, 10000))
         lavoro: str = choice(["Indeterminato", "Determinato", "Partita_IVA", "Disoccupato"])
-        punteggio_credito : int = np.random.randint(1, 10)
-        debito_credito: int = np.random.randint(-1000, 5000)
+        punteggio_credito: int = int(np.random.randint(1, 10))
+        debito_credito: int = int(np.random.randint(-1000, 5000))
 
-        esito: int = 0
-        if entrate > uscite and punteggio_credito > 6 and lavoro == "Indeterminato" or lavoro == "Partita_IVA":
+        if entrate > uscite and punteggio_credito > 6 and (lavoro == "Indeterminato" or lavoro == "Partita_IVA"):
             print("CONCESSO ✅")
-            esito += 1
+            esito = 1
         else:
-            esito = 0
             print("NEGATO!!! ❌")
+            esito = 0
 
-        utente["ID_UTENTE"].append(id)
+        utente["ID_UTENTE"].append(id_utente)
         utente["CONTO_CORRENTE"].append(conto_corrente)
         utente["ENTRATE"].append(entrate)
         utente["USCITE"].append(uscite)
@@ -43,18 +41,10 @@ def crea_credenziali() -> pd.DataFrame:
 
     return pd.DataFrame(utente)
 
-new_id = crea_credenziali()
-new_id.to_csv("credenziali.csv", index=False)
-print("Credenziali salvate con successo ✅!!! ")
+def salva_dataset_grezzo(df: pd.DataFrame, percorso_file: str) -> None:
+    df.to_csv(percorso_file, index=False)
+    print("Credenziali salvate con successo ✅!!! ")
 
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    dataset_credenziali = genera_dati_credenziali(100)
+    salva_dataset_grezzo(dataset_credenziali, "credenziali.csv")
